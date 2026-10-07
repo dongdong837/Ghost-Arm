@@ -1,0 +1,22 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+*.log
+runtime/
+dist/
+*.png
+*.jpg
+*.jpeg
+
+# Local build and editor artifacts
+build/
+install/
+log/
+.vscode/
+.idea/
+*.so
+*.o

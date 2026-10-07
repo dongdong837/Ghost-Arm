@@ -1,0 +1,57 @@
+{
+  "convention": "standard_DH_Rz_Tz_Tx_Rx",
+  "base_frame": "base_link",
+  "tip_frame": "grasp_center",
+  "base_translation_m": [
+    -0.33,
+    0.0,
+    -0.08
+  ],
+  "rows": [
+    {
+      "joint": "tail_yaw",
+      "a_m": 0.0,
+      "alpha_rad": -1.5707963267948966,
+      "d_m": -0.045,
+      "theta_offset_rad": 0.0
+    },
+    {
+      "joint": "tail_shoulder",
+      "a_m": 0.22,
+      "alpha_rad": 0.0,
+      "d_m": 0.0,
+      "theta_offset_rad": 1.5707963267948966
+    },
+    {
+      "joint": "tail_elbow",
+      "a_m": 0.2,
+      "alpha_rad": 0.0,
+      "d_m": 0.0,
+      "theta_offset_rad": 0.0
+    },
+    {
+      "joint": "tail_wrist",
+      "a_m": 0.115,
+      "alpha_rad": 0.0,
+      "d_m": 0.0,
+      "theta_offset_rad": 0.0
+    }
+  ],
+  "tip_rotation": [
+    [
+      0,
+      0,
+      -1
+    ],
+    [
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ]
+  ]
+}

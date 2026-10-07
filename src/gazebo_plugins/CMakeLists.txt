@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(ghost_arm_plugins)
+find_package(ignition-gazebo6 REQUIRED)
+add_library(ghost_joint_feedback SHARED joint_feedback.cc)
+target_link_libraries(ghost_joint_feedback PRIVATE ignition-gazebo6::ignition-gazebo6)
+set_property(TARGET ghost_joint_feedback PROPERTY CXX_STANDARD 17)

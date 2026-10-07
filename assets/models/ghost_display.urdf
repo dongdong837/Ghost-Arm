@@ -1,0 +1,316 @@
+<robot name="ghost_display">
+  <link name="base_link">
+    <visual name="ghost_body">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.25" />
+      </geometry>
+      <material name="ghost_body">
+        <color rgba="0.65 0.9 1.0 1" />
+      </material>
+    </visual>
+    <visual name="left_eye">
+      <origin xyz="0.225 0.075 0.05" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.035" />
+      </geometry>
+      <material name="left_eye">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <visual name="left_pupil">
+      <origin xyz="0.253 0.075 0.05" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.016" />
+      </geometry>
+      <material name="left_pupil">
+        <color rgba="0.025 0.04 0.10 1" />
+      </material>
+    </visual>
+    <visual name="right_eye">
+      <origin xyz="0.225 -0.075 0.05" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.035" />
+      </geometry>
+      <material name="right_eye">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <visual name="right_pupil">
+      <origin xyz="0.253 -0.075 0.05" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.016" />
+      </geometry>
+      <material name="right_pupil">
+        <color rgba="0.025 0.04 0.10 1" />
+      </material>
+    </visual>
+    <visual name="mouth">
+      <origin xyz="0.245 0 -0.065" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.018" />
+      </geometry>
+      <material name="mouth">
+        <color rgba="0.06 0.10 0.20 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="bottom_mount">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.24 0.18 0.035" />
+      </geometry>
+      <material name="bottom_mount_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.24 0.18 0.035" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="bottom_mount_fixed" type="fixed">
+    <parent link="base_link" />
+    <child link="bottom_mount" />
+    <origin xyz="0 0 -0.25" rpy="0 0 0" />
+  </joint>
+  <link name="grasp_camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.065 0.1 0.035" />
+      </geometry>
+      <material name="grasp_camera_link_color">
+        <color rgba="0.10 0.20 0.28 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.065 0.1 0.035" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="grasp_camera_fixed" type="fixed">
+    <parent link="bottom_mount" />
+    <child link="grasp_camera_link" />
+    <origin xyz="0.065 0 -0.04" rpy="0 0 0" />
+  </joint>
+  <link name="tail_bracket">
+    <visual>
+      <origin xyz="-0.025 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.14 0.09 0.07" />
+      </geometry>
+      <material name="tail_bracket_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.025 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.14 0.09 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="tail_bracket_fixed" type="fixed">
+    <parent link="base_link" />
+    <child link="tail_bracket" />
+    <origin xyz="-0.27 0 -0.04" rpy="0 0 0" />
+  </joint>
+  <link name="tail_yaw_link">
+    <visual>
+      <origin xyz="0 0 -0.012" rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.085 0.055" />
+      </geometry>
+      <material name="tail_yaw_link_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.012" rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.085 0.055" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius=".032" length=".075" />
+      </geometry>
+      <material name="bearing_gold">
+        <color rgba="0.85 0.55 0.12 1" />
+      </material>
+    </visual>
+  </link>
+  <joint name="tail_yaw" type="revolute">
+    <parent link="tail_bracket" />
+    <child link="tail_yaw_link" />
+    <origin xyz="-0.06 0 -0.04" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.3" upper="1.3" effort="8" velocity="1" />
+  </joint>
+  <link name="tail_upper">
+    <visual>
+      <origin xyz="0 0 -0.11" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.055 0.22" />
+      </geometry>
+      <material name="tail_upper_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.11" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.055 0.22" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".032" length=".075" />
+      </geometry>
+      <material name="bearing_gold">
+        <color rgba="0.85 0.55 0.12 1" />
+      </material>
+    </visual>
+  </link>
+  <joint name="tail_shoulder" type="revolute">
+    <parent link="tail_yaw_link" />
+    <child link="tail_upper" />
+    <origin xyz="0 0 -0.045" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit lower="-1.6" upper="0.7" effort="8" velocity="1" />
+  </joint>
+  <link name="tail_lower">
+    <visual>
+      <origin xyz="0 0 -0.1" rpy="0 0 0" />
+      <geometry>
+        <box size="0.04 0.05 0.2" />
+      </geometry>
+      <material name="tail_lower_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.1" rpy="0 0 0" />
+      <geometry>
+        <box size="0.04 0.05 0.2" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".032" length=".075" />
+      </geometry>
+      <material name="bearing_gold">
+        <color rgba="0.85 0.55 0.12 1" />
+      </material>
+    </visual>
+  </link>
+  <joint name="tail_elbow" type="revolute">
+    <parent link="tail_upper" />
+    <child link="tail_lower" />
+    <origin xyz="0 0 -0.22" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit lower="-1.8" upper="1.8" effort="8" velocity="1" />
+  </joint>
+  <link name="gripper_palm">
+    <visual>
+      <origin xyz="0 0 -0.035" rpy="0 0 0" />
+      <geometry>
+        <box size="0.065 0.115 0.055" />
+      </geometry>
+      <material name="gripper_palm_color">
+        <color rgba="0.15 0.65 0.8 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.035" rpy="0 0 0" />
+      <geometry>
+        <box size="0.065 0.115 0.055" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".032" length=".075" />
+      </geometry>
+      <material name="bearing_gold">
+        <color rgba="0.85 0.55 0.12 1" />
+      </material>
+    </visual>
+  </link>
+  <joint name="tail_wrist" type="revolute">
+    <parent link="tail_lower" />
+    <child link="gripper_palm" />
+    <origin xyz="0 0 -0.2" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.2" upper="2.2" effort="8" velocity="1" />
+  </joint>
+  <link name="finger_left">
+    <visual>
+      <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.016 0.085" />
+      </geometry>
+      <material name="finger_left_color">
+        <color rgba="0.10 0.20 0.28 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.016 0.085" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="finger_left_slide" type="prismatic">
+    <parent link="gripper_palm" />
+    <child link="finger_left" />
+    <origin xyz="0 0.018 -0.06" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0.03" effort="8" velocity=".06" />
+  </joint>
+  <link name="finger_right">
+    <visual>
+      <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.016 0.085" />
+      </geometry>
+      <material name="finger_right_color">
+        <color rgba="0.10 0.20 0.28 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+      <geometry>
+        <box size="0.045 0.016 0.085" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="finger_right_slide" type="prismatic">
+    <parent link="gripper_palm" />
+    <child link="finger_right" />
+    <origin xyz="0 -0.018 -0.06" rpy="0 0 0" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="0.03" effort="8" velocity=".06" />
+  </joint>
+  <link name="grasp_center" />
+  <joint name="grasp_center_fixed" type="fixed">
+    <parent link="gripper_palm" />
+    <child link="grasp_center" />
+    <origin xyz="0 0 -0.115" rpy="0 0 0" />
+  </joint>
+  <link name="grasp_camera_optical_frame" />
+  <joint name="grasp_optical_fixed" type="fixed">
+    <parent link="grasp_camera_link" />
+    <child link="grasp_camera_optical_frame" />
+    <origin xyz="0 0 -0.02" rpy="3.14159265359 0 -1.57079632679" />
+  </joint>
+</robot>
