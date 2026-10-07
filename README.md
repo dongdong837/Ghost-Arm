@@ -2,7 +2,7 @@
 
 A ROS 2 and Gazebo simulation of a floating robot with a 4-DOF robotic arm and gripper, featuring DH-based forward kinematics, analytical inverse kinematics, RGB-D sensing, body collision checks, and physics-based object grasping.
 
-在球形飞行机器人后方安装四轴尾臂和双指夹爪，底部安装 RGB-D 相机，用于学习机械臂建模、正逆运动学、深度测量与物理抓取。项目在 [Ghost Sim](https://github.com/dongdong837/ghost-sim) 基础上扩展，保留三维导航和大模型目标控制。
+在球形飞行机器人后方安装四轴尾臂和双指夹爪，底部安装 RGB-D 相机，用于学习机械臂建模、正逆运动学、深度测量与物理抓取。项目重点是四轴机械臂的运动学计算、关节执行与抓取仿真。
 
 ## 已实现功能
 
@@ -12,8 +12,6 @@ A ROS 2 and Gazebo simulation of a floating robot with a 4-DOF robotic arm and g
 - **运动执行与球体避碰**：插值驱动关节，检查运动连杆与球体的间隙，拒绝穿过球体的直接关节路径。
 - **RGB-D 测量**：底部彩色图、深度图精确时间戳配对，点击像素反投影为三维表面点，再转换到球体坐标系。
 - **物理抓取**：夹取地面 4×4×6 厘米木块，依靠接触与摩擦抬起，默认末端俯仰角为 −60°。
-- **三维导航**：从已知场景生成体素地图，通过三维 A* 规划球体飞行路线。
-- **大模型目标控制**：调用阶跃星辰云端 API，将自然语言转换为受约束的飞行目标。
 
 ## 环境与安装
 
@@ -95,29 +93,7 @@ cd ghost_arm
 
 **当前抓取演示使用 Gazebo 提供的木块位姿，尚未串联视觉识别、目标定位和自动抓取。** 深度测量与物理抓取目前是独立功能。
 
-## 飞行、三维导航与大模型
-
-```bash
-./ghost.sh teleop
-./ghost.sh goto 0 0 2.2
-./ghost.sh stop
-```
-
-遥控：W/S 为世界 ±X，A/D 为 ±Y，R/F 升降，J/L 转向，空格/K 取消导航并悬停，Q 退出。导航坐标为世界坐标系，单位米。
-
-模型通过云端 API 调用，并非在本机部署大模型权重。密钥通过环境变量传入，不要写进源码：
-
-```bash
-read -rsp 'StepFun API key: ' STEPFUN_API_KEY; echo
-export STEPFUN_API_KEY
-./ghost.sh ai '飞到房间中心，高度2米'
-./ghost.sh ai '降低半米' --dry-run
-./ghost.sh ai '停下'
-```
-
-`--dry-run` 调用模型并校验目标但不运动；`--vision` 上传一帧相机图像用于观察问答，不会进行视觉抓取。配置见 `config/ghost_ai_config.json`，支持 `STEPFUN_BASE_URL`、`STEPFUN_LLM_MODEL`、`STEPFUN_VISION_MODEL` 环境变量。
-
-## 目录
+## 机械臂相关目录
 
 ```text
 ghost_arm/
@@ -129,12 +105,9 @@ ghost_arm/
 │       ├── kinematics/         # DH、正逆运动学、球体间隙检查
 │       ├── control/            # 飞行、关节运动、抓取流程
 │       ├── perception/         # RGB-D 同步、深度反投影
-│       ├── navigation/        # 三维 A* 与目标执行
-│       ├── mapping/           # 已知场景体素地图
-│       ├── visualization/     # TF、模型与参考场景显示
-│       └── ai/                # 模型 API 与目标意图解析
+│       └── visualization/      # TF、模型与参考场景显示
 ├── assets/                     # 世界、模型与场景模板
-├── config/                     # DH、桥接、RViz、API 非敏感配置
+├── config/                     # DH、桥接与 RViz 配置
 ├── launch/                     # ROS 2 启动文件
 ├── scripts/                    # 启动、编译、打包脚本
 ├── tests/                      # 单元测试与仿真集成检查
@@ -143,7 +116,7 @@ ghost_arm/
 └── dist/                       # 源码包，不上传
 ```
 
-内部包名 `ghost_sim` 保留以兼容原有功能。项目与 Ghost Sim 共用 ROS_DOMAIN_ID=43 和 Gazebo 分区 `ghost_sim`，不要同时启动两套仿真。
+以上列出机械臂相关的主要目录。代码由原 Ghost Sim 项目扩展，内部包名仍为 `ghost_sim`；仓库中保留的旧项目模块不作为本机械臂项目的功能介绍。项目与 Ghost Sim 共用 ROS_DOMAIN_ID=43 和 Gazebo 分区 `ghost_sim`，不要同时启动两套仿真。
 
 ## 测试与打包
 
@@ -152,11 +125,10 @@ ghost_arm/
 ./ghost.sh package
 ```
 
-源码包生成在 `dist/ghost-arm-source.tar.gz`。修改模型生成代码后，执行 `./ghost.sh build-model` 并重启仿真。`check-flight`、`check-navigation` 属于会移动机器人的集成检查，应在初始场景中单独执行。
+源码包生成在 `dist/ghost-arm-source.tar.gz`。修改模型生成代码后，执行 `./ghost.sh build-model` 并重启仿真。
 
 ## 当前边界
 
-- 地图来自已知场景几何，不是 SLAM；三维导航以球体外形为基础，尚未覆盖展开机械臂的完整避障。
 - 机械臂路径检查针对连杆与球体，不是完整的环境碰撞规划，也没有接入 MoveIt。
 - 世界采用零重力理想飞行，木块单独施加向下重力；不模拟旋翼或真实飞控。
 - 抓取演示要求木块位于初始位置附近并平放，释放为张开后自由落下，不是任意物体抓取或精确放置。
